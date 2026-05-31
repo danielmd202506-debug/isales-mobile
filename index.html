@@ -290,7 +290,7 @@ function handleDetailAction(a){
 function actionSheet(title,actions,placement='top'){
   document.querySelector('.mask')?.remove();
   const m=document.createElement('div');m.className='mask menu';
-  m.innerHTML=`<div class="float-menu ${placement}"><h3>${title}</h3><div class="action-list">${actions.map(a=>`<button data-action="${a.action}">${a.text}</button>`).join('')}</div></div>`;
+  m.innerHTML=`<div class="float-menu ${placement}"><div class="action-list">${actions.map(a=>`<button data-action="${a.action}">${a.text}</button>`).join('')}</div></div>`;
   document.querySelector('.phone').appendChild(m);
 }
 function confirmDialog(title,sub,okAction){
