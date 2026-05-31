@@ -117,6 +117,132 @@ function projectRemarkPanel(){
   const extra=`<div class="project-form"><div class="field"><label>备注内容</label><textarea class="textarea">客户希望在验收前补充一轮远程联调记录，需服务经理确认支持窗口。</textarea></div><label class="check-row"><input type="checkbox" checked><span>备注同步到项目动态</span><em>可追溯</em></label></div>`;
   sheet('添加项目备注',p.name,[['客户',p.customer],['阶段',p.stage],['负责人',p.owner]],[{text:'取消',action:'close'},{text:'保存备注',action:'project-remark-save',primary:true}],extra);
 }
+function detailRemarkPanel(){
+  const title=currentDetailContext.title||'业务记录';
+  const extra=`<div class="project-form"><div class="field"><label>备注内容</label><textarea class="textarea">补充现场情况、客户反馈和下一步跟进事项。</textarea></div><label class="check-row"><input type="checkbox" checked><span>同步到相关客户 / 项目动态</span><em>可追溯</em></label></div>`;
+  sheet('添加备注',title,[['来源','iSales Mobile'],['关联对象',currentDetailContext.kind||'业务详情'],['状态','待同步']],[{text:'取消',action:'close'},{text:'保存备注',action:'detail-remark-save',primary:true}],extra);
+}
+function visitCheckinPanel(){
+  const title=currentDetailContext.title||'客户拜访';
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>GPS 定位已获取</span><em>32m</em></label><label class="check-row"><input type="checkbox" checked><span>客户 WiFi 已匹配</span><em>Riyadh-HQ</em></label><div class="field"><label>签到备注</label><textarea class="textarea">到达客户现场，准备进行 5G Core 扩容方案沟通。</textarea></div></div>`;
+  sheet('现场签到',title,[['客户','Riyadh Telecom'],['计划时间','今日 14:00'],['签到方式','GPS + WiFi'],['关联项目','Riyadh 5G Core']],[{text:'暂存',action:'visit-checkin-draft'},{text:'确认签到',action:'visit-checkin-save',primary:true}],extra);
+}
+function visitMinutesPanel(){
+  const title=currentDetailContext.title||'拜访纪要';
+  const extra=`<div class="project-form"><div class="field"><label>纪要</label><textarea class="textarea">客户关注验收周期与扩容报价，要求补充交付风险说明和报价有效期。</textarea></div><div class="field"><label>跟进事项</label><input class="input" value="明日 18:00 前提交扩容方案与报价版本"></div><label class="check-row"><input type="checkbox" checked><span>生成项目待办并同步 CRM</span><em>2 条</em></label></div>`;
+  sheet('写拜访纪要',title,[['客户','Riyadh Telecom'],['关联商机','5G Core 扩容'],['参与人','CTO / 客户经理 / 方案经理']],[{text:'保存草稿',action:'visit-minutes-draft'},{text:'提交纪要',action:'visit-minutes-save',primary:true}],extra);
+}
+function opportunityPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>商机名称</label><input class="input" value="Riyadh 5G Core 二期扩容"></div><div class="field"><label>预计金额</label><input class="input" value="USD 1.8M"></div><div class="field"><label>下一动作</label><input class="input" value="补充报价与交付排期"></div></div>`;
+  sheet('新增商机','由拜访纪要转入商机池',[['客户','Riyadh Telecom'],['阶段','需求确认'],['来源','客户拜访']],[{text:'保存草稿',action:'opportunity-draft'},{text:'创建商机',action:'opportunity-save',primary:true}],extra);
+}
+function issueLogPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>处理记录</label><textarea class="textarea">现场复现失败场景，已抓取日志，疑似版本兼容导致调测失败。</textarea></div><label class="check-row"><input type="checkbox" checked><span>附加照片 / 日志 / 录音证据</span><em>3 个</em></label></div>`;
+  sheet('补充问题记录',currentDetailContext.title||'问题单',[['等级','高'],['处理人','服务经理'],['SLA','剩余 6 小时']],[{text:'保存草稿',action:'issue-log-draft'},{text:'补充并同步',action:'issue-log-save',primary:true}],extra);
+}
+function issueAssignPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>转派对象</label><div class="seg"><button>工程师</button><button class="active">服务经理</button><button>项目经理</button></div></div><div class="field"><label>转派说明</label><textarea class="textarea">需服务经理协调客户侧窗口，并确认是否升级供应商支持。</textarea></div></div>`;
+  sheet('转派问题',currentDetailContext.title||'问题单',[['当前处理人','现场工程师'],['建议处理人','服务经理'],['优先级','高']],[{text:'取消',action:'close'},{text:'确认转派',action:'issue-assign-save',primary:true}],extra);
+}
+function issueClosePanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>根因与处理记录完整</span><em>已检查</em></label><label class="check-row"><input type="checkbox" checked><span>客户确认结果</span><em>待签</em></label><div class="field"><label>关闭说明</label><textarea class="textarea">修复方案已验证，等待客户确认后关闭归档。</textarea></div></div>`;
+  sheet('关闭问题',currentDetailContext.title||'问题单',[['状态','处理中'],['客户确认','待确认'],['归档','未完成']],[{text:'保存',action:'issue-close-draft'},{text:'提交关闭确认',action:'issue-close-save',primary:true}],extra);
+}
+function acceptanceChecklistPanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>设备到货与序列号核验</span><em>完成</em></label><label class="check-row"><input type="checkbox" checked><span>测试报告上传</span><em>6 项</em></label><label class="check-row"><input type="checkbox"><span>客户现场签字</span><em>待完成</em></label></div>`;
+  sheet('验收检查清单',currentDetailContext.title||'现场验收',[['验收单','ACC-20260530-08'],['项目','Dubai Enterprise Cloud'],['缺口','1 项']],[{text:'保存检查',action:'acceptance-check-save'},{text:'进入签字',action:'customer-sign',primary:true}],extra);
+}
+function customerSignPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>签字人</label><input class="input" value="Dubai Gov Cloud / Operations Director"></div><div class="field"><label>确认条款</label><textarea class="textarea">确认现场验收项通过，未完成项进入遗留问题清单并跟踪关闭。</textarea></div><label class="check-row"><input type="checkbox" checked><span>签字后自动归档并通知铁三角</span><em>开启</em></label></div>`;
+  sheet('客户电子签名',currentDetailContext.title||'验收单',[['签字状态','客户待签'],['验收单','ACC-20260530-08'],['水印','已开启']],[{text:'保存草稿',action:'acceptance-sign-draft'},{text:'提交签字',action:'acceptance-sign-save',primary:true}],extra);
+}
+function certificatePanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>验收清单</span><em>已合并</em></label><label class="check-row"><input type="checkbox" checked><span>测试报告</span><em>已附加</em></label><label class="check-row"><input type="checkbox"><span>客户签名页</span><em>待签</em></label></div>`;
+  sheet('生成验收证书',currentDetailContext.title||'验收归档',[['证书模板','企业云验收 V2'],['归档目录','项目 / 验收'],['状态','可生成草稿']],[{text:'预览证书',action:'acceptance-cert-preview'},{text:'生成草稿',action:'acceptance-cert-save',primary:true}],extra);
+}
+function docPreviewPanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>权限校验通过</span><em>项目成员</em></label><label class="check-row"><input type="checkbox" checked><span>动态水印</span><em>已开启</em></label><div class="field"><label>预览文件</label><input class="input" value="Riyadh_5G_Core_Implementation_Plan_v4.pdf"></div></div>`;
+  sheet('文档预览',currentDetailContext.title||'项目文档',[['版本','最新版'],['权限','可查看'],['访问留痕','开启']],[{text:'关闭',action:'close'},{text:'打开预览',action:'doc-preview-open',primary:true}],extra);
+}
+function docCachePanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>实施方案 / 图纸</span><em>18 个</em></label><label class="check-row"><input type="checkbox" checked><span>验收报告模板</span><em>4 个</em></label><label class="check-row"><input type="checkbox"><span>历史报价附件</span><em>可选</em></label></div>`;
+  sheet('离线缓存',currentDetailContext.title||'资料中心',[['网络','在线'],['剩余空间','2.4 GB'],['加密','AES-256']],[{text:'取消',action:'close'},{text:'开始缓存',action:'doc-cache-save',primary:true}],extra);
+}
+function docSharePanel(){
+  const extra=`<div class="project-form"><div class="field"><label>分享范围</label><div class="seg"><button>仅自己</button><button class="active">铁三角</button><button>客户</button></div></div><label class="check-row"><input type="checkbox" checked><span>设置 7 天有效期和下载水印</span><em>安全</em></label></div>`;
+  sheet('受控分享',currentDetailContext.title||'文档',[['对象','铁三角成员'],['权限','只读'],['有效期','7 天']],[{text:'取消',action:'close'},{text:'生成链接',action:'doc-share-save',primary:true}],extra);
+}
+function orderTrackPanel(){
+  const extra=timeline(['2026-05-30 已出库','2026-05-31 清关中','2026-06-03 预计到达客户仓','2026-06-05 计划现场签收']);
+  sheet('物流跟踪',currentDetailContext.title||'订单与发货',[['订单号','SO-20260530-188'],['承运商','DHL Enterprise'],['状态','运输中'],['预计到货','2026-06-05']],[{text:'刷新物流',action:'order-track-refresh'},{text:'异常上报',action:'order-risk-save',primary:true}],extra);
+}
+function orderReceivePanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>外箱无破损</span><em>现场</em></label><label class="check-row"><input type="checkbox" checked><span>序列号与装箱单一致</span><em>12 件</em></label><div class="field"><label>签收备注</label><textarea class="textarea">客户仓库已接收，等待安装团队开箱核验。</textarea></div></div>`;
+  sheet('现场签收',currentDetailContext.title||'订单签收',[['订单号','SO-20260530-188'],['签收人','客户仓库主管'],['状态','待确认']],[{text:'保存草稿',action:'order-receive-draft'},{text:'确认签收',action:'order-receive-save',primary:true}],extra);
+}
+function orderRiskPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>异常类型</label><div class="seg"><button>清关</button><button class="active">延误</button><button>破损</button></div></div><div class="field"><label>影响说明</label><textarea class="textarea">预计到货可能延迟 2 天，影响现场安装窗口。</textarea></div></div>`;
+  sheet('订单异常上报',currentDetailContext.title||'订单异常',[['订单号','SO-20260530-188'],['影响项目','Riyadh 5G Core'],['当前状态','运输中']],[{text:'保存',action:'order-risk-draft'},{text:'上报异常',action:'order-risk-save',primary:true}],extra);
+}
+function dailyPreviewPanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>今日任务 5 项</span><em>已汇总</em></label><label class="check-row"><input type="checkbox" checked><span>问题 / 风险 3 项</span><em>已汇总</em></label><div class="field"><label>摘要</label><textarea class="textarea">今日完成现场安装、客户拜访和问题跟踪，风险集中在验收窗口与物流到货。</textarea></div></div>`;
+  sheet('日报预览',currentDetailContext.title||'今日日报',[['日期','今日'],['状态','草稿'],['审批人','区域交付经理']],[{text:'编辑内容',action:'edit-daily'},{text:'提交审批',action:'submit-daily',primary:true}],extra);
+}
+function dailyEditPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>今日完成</label><textarea class="textarea">完成安装调测 82%，提交客户拜访纪要，更新 2 条问题单。</textarea></div><div class="field"><label>明日计划</label><textarea class="textarea">推进客户验收签字，确认物流到货和风险处置。</textarea></div></div>`;
+  sheet('编辑日报',currentDetailContext.title||'日报',[['自动汇总','已完成'],['可编辑','是'],['审批','待提交']],[{text:'保存草稿',action:'daily-edit-draft'},{text:'保存并预览',action:'daily-edit-save',primary:true}],extra);
+}
+function dailySubmitPanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>同步项目、问题、拜访数据</span><em>完成</em></label><div class="field"><label>审批备注</label><input class="input" value="请关注验收窗口和物流风险"></div></div>`;
+  sheet('提交日报审批',currentDetailContext.title||'日报',[['审批人','区域交付经理'],['抄送','铁三角'],['状态','待提交']],[{text:'取消',action:'close'},{text:'提交审批',action:'daily-submit-save',primary:true}],extra);
+}
+function quotePreviewPanel(){
+  const extra=`<div class="project-form"><div class="rows"><div><span>设备与软件</span><b>USD 1.2M</b></div><div><span>服务与交付</span><b>USD 0.6M</b></div><div><span>总价</span><b>USD 1.8M</b></div></div></div>`;
+  sheet('查看报价',currentDetailContext.title||'报价单',[['客户','Riyadh Telecom'],['版本','V3'],['有效期','7 天'],['折扣','待审批']],[{text:'申请折扣',action:'request-discount'},{text:'发给客户',action:'send-quote',primary:true}],extra);
+}
+function quoteDiscountPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>申请折扣</label><div class="seg"><button>3%</button><button class="active">5%</button><button>8%</button></div></div><div class="field"><label>申请理由</label><textarea class="textarea">客户承诺本季度下单，需匹配竞品商务条件。</textarea></div></div>`;
+  sheet('申请折扣',currentDetailContext.title||'报价折扣',[['报价版本','V3'],['当前折扣','0%'],['审批人','销售主管']],[{text:'保存草稿',action:'quote-discount-draft'},{text:'发起审批',action:'quote-discount-save',primary:true}],extra);
+}
+function quoteSendPanel(){
+  const extra=`<div class="project-form"><div class="field"><label>接收人</label><input class="input" value="Riyadh Telecom CTO / Procurement"></div><label class="check-row"><input type="checkbox" checked><span>启用有效期、水印与访问追踪</span><em>7 天</em></label></div>`;
+  sheet('发送报价',currentDetailContext.title||'报价单',[['客户','Riyadh Telecom'],['版本','V3'],['分享方式','受控链接']],[{text:'取消',action:'close'},{text:'生成并发送',action:'quote-send-save',primary:true}],extra);
+}
+function defaultActionPanel(){
+  const extra=`<div class="project-form"><label class="check-row"><input type="checkbox" checked><span>同步到工作台待办</span><em>开启</em></label><div class="field"><label>处理说明</label><textarea class="textarea">补充业务详情，并生成下一步待办。</textarea></div></div>`;
+  sheet('继续处理',currentDetailContext.title||'业务详情',[['来源','iSales / CRM'],['状态','已同步'],['离线','可用']],[{text:'取消',action:'close'},{text:'完成处理',action:'default-action-save',primary:true}],extra);
+}
+function handleDetailAction(a){
+  const kind=currentDetailContext.kind;
+  if(kind==='project'&&a==='update-progress'){projectProgressPanel();return true}
+  if(kind==='project'&&a==='report-risk'){projectRiskPanel();return true}
+  if(kind==='project'&&a==='show-milestone'){projectMilestonePanel();return true}
+  if(kind==='project'&&a==='page-secondary'){projectRemarkPanel();return true}
+  if(kind==='visit'&&a==='do-checkin'){visitCheckinPanel();return true}
+  if(kind==='visit'&&a==='write-minutes'){visitMinutesPanel();return true}
+  if(kind==='visit'&&a==='new-opportunity'){opportunityPanel();return true}
+  if(kind==='issue'&&a==='append-log'){issueLogPanel();return true}
+  if(kind==='issue'&&a==='assign-issue'){issueAssignPanel();return true}
+  if(kind==='issue'&&a==='close-issue'){issueClosePanel();return true}
+  if(kind==='acceptance'&&a==='check-list'){acceptanceChecklistPanel();return true}
+  if(kind==='acceptance'&&a==='customer-sign'){customerSignPanel();return true}
+  if(kind==='acceptance'&&a==='gen-cert'){certificatePanel();return true}
+  if(kind==='doc'&&a==='preview-doc'){docPreviewPanel();return true}
+  if(kind==='doc'&&a==='cache-doc'){docCachePanel();return true}
+  if(kind==='doc'&&a==='share-doc'){docSharePanel();return true}
+  if(kind==='order'&&a==='track-order'){orderTrackPanel();return true}
+  if(kind==='order'&&a==='receive-order'){orderReceivePanel();return true}
+  if(kind==='order'&&a==='report-risk'){orderRiskPanel();return true}
+  if(kind==='daily'&&a==='preview-daily'){dailyPreviewPanel();return true}
+  if(kind==='daily'&&a==='edit-daily'){dailyEditPanel();return true}
+  if(kind==='daily'&&a==='submit-daily'){dailySubmitPanel();return true}
+  if(kind==='quote'&&a==='preview-quote'){quotePreviewPanel();return true}
+  if(kind==='quote'&&a==='request-discount'){quoteDiscountPanel();return true}
+  if(kind==='quote'&&a==='send-quote'){quoteSendPanel();return true}
+  if(a==='page-secondary'){detailRemarkPanel();return true}
+  if(a==='page-primary'){defaultActionPanel();return true}
+  return false;
+}
 function actionSheet(title,actions,placement='top'){
   document.querySelector('.mask')?.remove();
   const m=document.createElement('div');m.className='mask menu';
@@ -146,7 +272,7 @@ function openBusinessDetail(kind,title,sub){
 }
 document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)render(b.dataset.tab)});
 content.addEventListener('click',e=>{const el=e.target.closest('[data-action]');if(!el)return;const a=el.dataset.action;if(a==='switch'){render(el.dataset.target);return}if(a==='checkin'||a==='visit'){detailPage('visit',el.dataset.title||el.textContent.trim(),el.dataset.sub||'客户拜访现场流程');return}if(a==='newIssue'){detailPage('issue','新建问题单','拍照、语音、定位并派单闭环');return}if(a==='acceptance'){detailPage('acceptance',el.dataset.title||'现场验收',el.dataset.sub||'验收清单、客户签字、自动归档');return}if(a==='daily'){detailPage('daily',el.dataset.title||'日报/周报',el.dataset.sub||'自动汇总，可编辑后提交');return}if(a==='quote'){detailPage('quote','报价确认','查看报价、申请折扣并同步 CRM');return}if(a==='order'){detailPage('order','订单与发货',el.dataset.sub||'物流跟踪、签收确认、异常上报');return}if(a==='docs'){detailPage('doc','资料中心','文档预览、离线缓存和权限留痕');return}if(a==='startTask'){detailPage('project','开始现场任务',el.dataset.sub||'执行任务并上传结果');return}if(a==='submitVisit'){confirmDialog('提交拜访纪要','提交后将同步客户、项目与商机记录。','confirm-visit');return}if(a==='submitIssue'){confirmDialog('提交问题单','问题单将派给服务经理，并通知铁三角成员。','confirm-issue');return}if(a==='project'){detailPage('project',el.dataset.title,el.dataset.sub);return}if(a==='detail'){const text=(el.dataset.title||'');const kind=text.includes('验收')?'acceptance':text.includes('问题')||text.includes('风险')?'issue':text.includes('资料')||text.includes('文档')?'doc':text.includes('拜访')?'visit':'default';detailPage(kind,el.dataset.title,el.dataset.sub);return}if(a==='search'){toast('支持项目、客户、合同、订单、问题单搜索')}});
-document.querySelector('.phone').addEventListener('click',e=>{const a=e.target.closest('[data-action]')?.dataset.action;if(a==='page-back'){document.querySelector('.page-view')?.remove();currentDetailContext={kind:'',title:'',sub:''};return}if(a==='page-top-more'){actionSheet('更多操作',currentTopMoreActions,'actionbar');return}if(a==='page-more'){actionSheet('更多操作',[{text:'刷新数据',action:'refresh-data'},{text:'离线缓存',action:'cache-doc'},{text:'分享给铁三角',action:'share-doc'}],'top');return}if(a==='close'){document.querySelector('.mask')?.remove();return}if(currentDetailContext.kind==='project'&&a==='update-progress'){projectProgressPanel();return}if(currentDetailContext.kind==='project'&&a==='report-risk'){projectRiskPanel();return}if(currentDetailContext.kind==='project'&&a==='show-milestone'){projectMilestonePanel();return}if(currentDetailContext.kind==='project'&&a==='page-secondary'){projectRemarkPanel();return}const messages={ 'open-detail':'已进入详情页','show-milestone':'已打开里程碑视图','update-progress':'进度已更新并同步','report-risk':'风险已上报并通知铁三角','do-checkin':'签到成功，已写入客户拜访记录','write-minutes':'已打开拜访纪要编辑','new-opportunity':'已创建商机草稿','assign-issue':'已打开转派人员选择','append-log':'处理记录已补充','close-issue':'问题已提交客户确认关闭','check-list':'已打开验收检查清单','customer-sign':'已进入客户电子签名','gen-cert':'验收证书已生成草稿','preview-doc':'已打开文档预览','cache-doc':'文档已加入离线缓存','share-doc':'已生成受控分享链接','track-order':'已打开物流轨迹','receive-order':'已进入现场签收','preview-daily':'已生成日报预览','edit-daily':'已进入日报编辑','submit-daily':'日报已提交审批','preview-quote':'已打开报价单','request-discount':'折扣审批已发起','send-quote':'报价已生成客户分享链接','page-primary':'操作已完成并同步','page-secondary':'备注已添加','confirm-visit':'拜访纪要已提交并同步','confirm-issue':'问题单已创建并派单','refresh-data':'数据已刷新','project-progress-draft':'项目进度草稿已保存','project-progress-save':'项目进度已提交，计划与待办已同步','project-risk-draft':'风险草稿已保存','project-risk-submit':'项目风险已上报，铁三角已收到通知','project-plan-adjust':'已进入里程碑计划调整','project-milestone-sync':'里程碑已同步到项目计划','project-remark-save':'项目备注已保存到动态'};if(messages[a]){document.querySelector('.mask')?.remove();toast(messages[a]);return}if(e.target.classList.contains('mask'))e.target.remove()});
+document.querySelector('.phone').addEventListener('click',e=>{const a=e.target.closest('[data-action]')?.dataset.action;if(a==='page-back'){document.querySelector('.page-view')?.remove();currentDetailContext={kind:'',title:'',sub:''};return}if(a==='page-top-more'){actionSheet('更多操作',currentTopMoreActions,'actionbar');return}if(a==='page-more'){actionSheet('更多操作',[{text:'刷新数据',action:'refresh-data'},{text:'离线缓存',action:'cache-doc'},{text:'分享给铁三角',action:'share-doc'}],'top');return}if(a==='close'){document.querySelector('.mask')?.remove();return}if(handleDetailAction(a))return;const messages={ 'open-detail':'已进入详情页','show-milestone':'已打开里程碑视图','update-progress':'进度已更新并同步','report-risk':'风险已上报并通知铁三角','do-checkin':'签到成功，已写入客户拜访记录','write-minutes':'已打开拜访纪要编辑','new-opportunity':'已创建商机草稿','assign-issue':'已打开转派人员选择','append-log':'处理记录已补充','close-issue':'问题已提交客户确认关闭','check-list':'已打开验收检查清单','customer-sign':'已进入客户电子签名','gen-cert':'验收证书已生成草稿','preview-doc':'已打开文档预览','cache-doc':'文档已加入离线缓存','share-doc':'已生成受控分享链接','track-order':'已打开物流轨迹','receive-order':'已进入现场签收','preview-daily':'已生成日报预览','edit-daily':'已进入日报编辑','submit-daily':'日报已提交审批','preview-quote':'已打开报价单','request-discount':'折扣审批已发起','send-quote':'报价已生成客户分享链接','page-primary':'操作已完成并同步','page-secondary':'备注已添加','confirm-visit':'拜访纪要已提交并同步','confirm-issue':'问题单已创建并派单','refresh-data':'数据已刷新','project-progress-draft':'项目进度草稿已保存','project-progress-save':'项目进度已提交，计划与待办已同步','project-risk-draft':'风险草稿已保存','project-risk-submit':'项目风险已上报，铁三角已收到通知','project-plan-adjust':'已进入里程碑计划调整','project-milestone-sync':'里程碑已同步到项目计划','project-remark-save':'项目备注已保存到动态','detail-remark-save':'备注已保存并同步到业务动态','visit-checkin-draft':'签到草稿已保存','visit-checkin-save':'现场签到已完成并写入拜访记录','visit-minutes-draft':'拜访纪要草稿已保存','visit-minutes-save':'拜访纪要已提交并同步 CRM','opportunity-draft':'商机草稿已保存','opportunity-save':'商机已创建并关联客户','issue-log-draft':'问题记录草稿已保存','issue-log-save':'问题处理记录已补充并同步','issue-assign-save':'问题已转派并通知处理人','issue-close-draft':'关闭草稿已保存','issue-close-save':'问题已提交客户确认关闭','acceptance-check-save':'验收检查清单已保存','acceptance-sign-draft':'客户签字草稿已保存','acceptance-sign-save':'客户电子签名已提交','acceptance-cert-preview':'验收证书预览已生成','acceptance-cert-save':'验收证书草稿已生成','doc-preview-open':'文档预览已打开并记录访问','doc-cache-save':'文档已加入离线加密缓存','doc-share-save':'受控分享链接已生成','order-track-refresh':'物流轨迹已刷新','order-receive-draft':'签收草稿已保存','order-receive-save':'现场签收已确认并同步订单','order-risk-draft':'订单异常草稿已保存','order-risk-save':'订单异常已上报并通知项目组','daily-edit-draft':'日报编辑草稿已保存','daily-edit-save':'日报内容已保存并生成预览','daily-submit-save':'日报已提交审批','quote-discount-draft':'折扣申请草稿已保存','quote-discount-save':'折扣审批已发起','quote-send-save':'报价链接已生成并发送给客户','default-action-save':'处理结果已同步到待办','doc-cache-save':'资料已加入离线缓存'};if(messages[a]){document.querySelector('.mask')?.remove();toast(messages[a]);return}if(e.target.classList.contains('mask'))e.target.remove()});
 document.getElementById('fab').addEventListener('click',()=>actionSheet('快捷新建',[{text:'新建客户拜访',action:'do-checkin'},{text:'新建问题单',action:'append-log'},{text:'发起现场验收',action:'customer-sign'},{text:'生成今日日报',action:'submit-daily'}],'bottom'));
 document.getElementById('more').addEventListener('click',()=>actionSheet('全局操作',[{text:'刷新数据',action:'refresh-data'},{text:'同步离线数据',action:'cache-doc'},{text:'账号与权限',action:'open-detail'},{text:'分享给铁三角',action:'share-doc'}],'top'));
 document.getElementById('profile').addEventListener('click',()=>sheet('个人中心','一线铁三角 / 项目经理',[['姓名','李明'],['角色','项目经理'],['区域','中东代表处'],['待同步','5 条'],['权限','客户/项目/订单可见']],[{text:'切换角色',action:'open-detail'},{text:'关闭',action:'close',primary:true}]));
