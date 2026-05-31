@@ -27,7 +27,7 @@
 <body>
 <div class="phone">
   <div class="app">
-    <div class="top"><div class="safe"></div><div class="statusbar"><b>9:41</b><span class="status-icons"><i class="ri-bar-chart-fill"></i><i class="ri-wifi-fill"></i><span class="battery"></span></span></div><div class="nav"><button id="profile" class="user-chip" aria-label="切换角色"><b id="userName">Daniel Ma F00888</b><span id="userRole">项目经理 <i class="ri-arrow-down-s-line"></i></span></button><h1 id="pageTitle">工作台</h1><button id="more" aria-label="更多">•••</button></div><div class="search"><input placeholder="搜索项目 / 客户 / 合同 / 回款单"><button data-action="search" aria-label="搜索"><i class="ri-search-line"></i></button></div></div>
+    <div class="top"><div class="safe"></div><div class="statusbar"><b>9:41</b><span class="status-icons"><i class="ri-bar-chart-fill"></i><i class="ri-wifi-fill"></i><span class="battery"></span></span></div><div class="nav"><button id="profile" class="user-chip" aria-label="切换角色"><b id="userName">Daniel Ma F00888</b><span id="userRole">AR <i class="ri-arrow-down-s-line"></i></span></button><h1 id="pageTitle">工作台</h1><button id="more" aria-label="更多">•••</button></div><div class="search"><input placeholder="搜索项目 / 客户 / 合同 / 回款单"><button data-action="search" aria-label="搜索"><i class="ri-search-line"></i></button></div></div>
     <main class="content" id="content"></main>
     <nav class="tabs" id="tabs"><button class="tab active" data-tab="home"><i class="ri-dashboard-line"></i><span>工作台</span></button><button class="tab" data-tab="customer"><i class="ri-user-voice-line"></i><span>客户</span></button><button class="tab" data-tab="project"><i class="ri-briefcase-4-line"></i><span>项目</span></button><button class="tab" data-tab="issue"><i class="ri-message-3-line"></i><span>消息</span></button><button class="tab" data-tab="doc"><i class="ri-user-3-line"></i><span>我的</span></button></nav>
   </div>
@@ -35,8 +35,8 @@
 </div>
 <script>
 const content=document.getElementById('content'),pageTitle=document.getElementById('pageTitle');
-let currentUser={name:'Daniel Ma F00888',role:'项目经理'};
-const roleOptions=[{name:'项目经理',desc:'项目指标、交付进度、审批和风险全量视图'},{name:'客户经理',desc:'客户拜访、线索机会、合同回款和客户偏好优先'},{name:'服务经理',desc:'问题处理、现场服务、验收闭环和客户满意度优先'},{name:'销售主管',desc:'团队指标、商机质量、关键风险和经营节奏优先'}];
+let currentUser={name:'Daniel Ma F00888',role:'AR'};
+const roleOptions=[{name:'AR',desc:'\u5ba2\u6237 / \u5546\u52a1'},{name:'SR',desc:'\u65b9\u6848 / \u6280\u672f'},{name:'FR',desc:'\u4ea4\u4ed8 / \u5c65\u7ea6'}];
 let pendingRole=currentUser.role;
 function updateUserChip(){document.getElementById('userName').textContent=currentUser.name;document.getElementById('userRole').innerHTML=currentUser.role+' <i class="ri-arrow-down-s-line"></i>'}
 function updateRoleOptionState(){document.querySelectorAll('.role-option').forEach(row=>{const active=row.dataset.role===pendingRole;row.classList.toggle('active',active);const input=row.querySelector('input');if(input)input.checked=active;const mark=row.querySelector('em');if(mark)mark.textContent=active?'当前选择':''})}
